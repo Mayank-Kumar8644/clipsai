@@ -2,11 +2,11 @@
 Parameter Input Validator for TranscribeAndClip.
 """
 # current package imports
-from texttile_config_manager import TextTileClipFinderConfigManager
+from .texttile_config_manager import TextTileClipFinderConfigManager
 
 # local package imports
-from ..utils.pytorch import check_valid_torch_device
-from ..input_validator import InputValidator
+from utils.pytorch import check_valid_torch_device
+from input_validator import InputValidator
 
 
 class ClipInputValidator(InputValidator):
@@ -50,14 +50,6 @@ class ClipInputValidator(InputValidator):
         if error is not None:
             return error
 
-        # file extension check
-        media_file_path: str = input_data["mediaFilePath"]
-        if not media_file_path.endswith((".mp3", ".mp4")):
-            error = "mediaFilePath must be of type mp3 or mp4. Received: {}".format(
-                media_file_path
-            )
-            return error
-
         # computeDevice
         if input_data["computeDevice"] is not None:
             error = check_valid_torch_device(input_data["computeDevice"])
@@ -97,9 +89,9 @@ class ClipInputValidator(InputValidator):
             The imputed input data.
         """
         if input_data["computeDevice"] == "auto":
-            input_data["computeDevice"] = None
+            input_data["computeDevice"] = "cpu"
         optional_fields_default_values = {
-            "computeDevice": None,
+            "computeDevice": "cpu",
             "cutoffPolicy": "high",
             "embeddingAggregationPoolMethod": "max",
             "minClipTime": 15,
